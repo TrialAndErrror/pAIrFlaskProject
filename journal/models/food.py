@@ -1,6 +1,7 @@
 import datetime
 
-from flask import jsonify
+from common.models import ResponseMessage
+
 from .. import db
 
 
@@ -15,12 +16,26 @@ class Food(db.Model):
 
 
 def make_food(amount, name):
+    if not amount:
+        return ResponseMessage(
+            message=f'Missing Food Amount',
+            success=False
+        )
+
+    if not name:
+        return ResponseMessage(
+            message=f'Missing Food Name',
+            success=False
+        )
     new_entry = Food(amount=amount, name=name)
 
     db.session.add(new_entry)
     db.session.commit()
 
-    return f'Food entry recorded: {amount} of {name}.'
+    return ResponseMessage(
+        message=f'Food entry recorded: {amount} of {name}.',
+        success=True
+    )
 
 
 def get_foods(date):

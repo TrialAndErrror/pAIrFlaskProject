@@ -1,5 +1,5 @@
 import datetime
-from flask import jsonify
+from common.models import ResponseMessage
 
 from .. import db
 
@@ -14,12 +14,21 @@ class Water(db.Model):
 
 
 def make_water(amount):
+    if not amount:
+        return ResponseMessage(
+            message=f'Missing Water Amount',
+            success=False
+        )
+
     new_entry = Water(amount=amount)
 
     db.session.add(new_entry)
     db.session.commit()
 
-    return f'Water entry recorded: {amount}.'
+    return ResponseMessage(
+        message=f'Water entry recorded: {amount}.',
+        success=True
+    )
 
 
 def get_waters(date):

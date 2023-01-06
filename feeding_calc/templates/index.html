@@ -1,0 +1,19 @@
+<!-- Form to enter calorie density and total volume -->
+<form id="calculation-form" action="/" method="post">
+  <label for="calorie-density">Calorie density:</label>
+  <input type="number" id="calorie-density" name="calorie_density">
+  <br>
+  <label for="total-volume">Total volume:</label>
+  <input type="number" id="total-volume" name="total_volume">
+  <br>
+  <button type="submit">Submit</button>
+</form>
+
+<!-- Template to display previous calculations -->
+{% for calculation in calculations %}
+  <div>
+    <p>Calorie density: {{ calculation.calorie_density }}</p>
+    <p>Total volume: {{ calculation.total_volume }}</p>
+    <p>Nutramigen amount: {{ calculation.nutramigen_amount }}</p>
+  </div>
+{% endfor %}

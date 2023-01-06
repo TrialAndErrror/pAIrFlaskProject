@@ -1,4 +1,4 @@
-from flask import request, render_template, jsonify
+from flask import request, render_template
 import datetime
 from dotenv import load_dotenv
 import os
@@ -6,7 +6,7 @@ import os
 from journal.models.food import Food, make_food, get_foods
 from journal.models.water import Water, make_water, get_waters
 from .dataclasses.message import parse_request_data
-from . import app, db
+from . import app
 
 load_dotenv(dotenv_path="../.env")
 
