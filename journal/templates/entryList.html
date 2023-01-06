@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,26 +5,38 @@
     <script src="{{ url_for('static', filename='js/getAllData.js') }}"></script>
 </head>
 <body>
-    <!-- Date picker input -->
-    <input type="date" id="datepicker">
-    <!-- Button to send request -->
-    <button onclick="getAllData()">Send Request</button>
+<form action="/" method="post">
+    <input type="date" name="date">
+    <button type="submit">Submit</button>
+</form>
 
-    <h1>Foods</h1>
-    <ul id="foodList">
-        {% for food in foods %}
-            <li>{{ food.name }}: {{ food.amount }}</li>
-        {% endfor %}
-    </ul>
+{% if date %}
+    <h1>Displaying logs for {{ date }}</h1>
+{% else %}
+    <h1>Displaying all logs</h1>
+{% endif %}
 
-    <h1>Drinks</h1>
-    <ul id="waterList">
-        {% for water in waters %}
-            <li>Water: {{ water.amount }}</li>
-        {% endfor %}
-    </ul>
+<h1>Foods</h1>
+{% if foods %}
+<ul id="foodList">
+    {% for food in foods %}
+        <li>{{ food.name }}: {{ food.amount }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No foods recorded {% if date %}on {{ date }}{% endif %}</p>
+{% endif %}
 
-<!-- Script to send request -->
+<h1>Drinks</h1>
+{% if waters %}
+<ul id="waterList">
+    {% for water in waters %}
+        <li>Water: {{ water.amount }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No waters recorded {% if date %}on {{ date }}{% endif %}</p>
+{% endif %}
 
 </body>
 </html>

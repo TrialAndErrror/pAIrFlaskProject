@@ -25,6 +25,7 @@ def make_food(amount, name):
 
 def get_foods(date):
     if date:
-        return jsonify(Food.query.filter(Food.created_at == date).all())
+        return Food.query.filter(Food.created_at == date).all()
     else:
-        return jsonify(Food.query.all())
+        data = Food.query.all()
+        return data

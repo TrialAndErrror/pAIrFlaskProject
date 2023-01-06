@@ -24,6 +24,6 @@ def make_water(amount):
 
 def get_waters(date):
     if date:
-        return jsonify(Water.query.filter(Water.created_at == date).all())
+        return Water.query.filter(Water.created_at == date).all()
     else:
-        return jsonify(Water.query.all())
+        return Water.query.all()

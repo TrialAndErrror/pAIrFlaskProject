@@ -13,30 +13,23 @@ load_dotenv(dotenv_path="../.env")
 
 @app.route('/', methods=['GET', 'POST'])
 def all_data():
-    if request.method == 'POST':
-        # Get the JSON data from the request body
-        data = request.get_json()
-
-        date_str = data.get('date')
-
-        date = None
-        if date_str:
-            date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-
-        foods = get_foods(date)
-        waters = get_waters(date)
-
-        return jsonify({
-            'foods': foods,
-            'waters': waters,
-        })
 
     # Get all entries from the database
     foods = Food.query.all()
     waters = Water.query.all()
+    date = None
+
+    if request.method == 'POST':
+        # Get the JSON data from the request body
+        if date := request.form.get('date'):
+            date_str = datetime.datetime.strptime(date, '%Y-%m-%d')
+
+            foods = get_foods(date_str)
+            waters = get_waters(date_str)
+            date = date_str
 
     # Render the template with the commands
-    return render_template('templates/entryList.html', foods=foods, waters=waters)
+    return render_template('templates/entryList.html', foods=foods, waters=waters, date=date)
 
 
 # Set up a route to receive POST requests at the /commands endpoint
@@ -61,11 +54,9 @@ def receive_message():
 def food():
     if request.method == 'POST':
         # Get the JSON data from the request body
-        data = request.get_json()
-
         make_food(
-            amount=data['amount'],
-            name=data.get("name", "")
+            amount=request.form['amount'],
+            name=request.form.get("name", "")
         )
 
     foods = Food.query.all()
@@ -77,8 +68,7 @@ def food():
 def water():
     if request.method == 'POST':
         # Get the JSON data from the request body
-        data = request.get_json()
-        make_water(amount=data['amount'])
+        make_water(amount=request.form['amount'])
 
     waters = Water.query.all()
 

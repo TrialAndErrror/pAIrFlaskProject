@@ -4,38 +4,18 @@
     <title>Commands</title>
 </head>
 <body>
+
 <h1>Waters</h1>
-<form id="water-form">
-  <label for="water-amount">Water Amount:</label><br>
-  <input type="text" id="water-amount" name="water-amount"><br><br>
-  <button type="submit">Submit</button>
+<form action="/water" method="post" id="water-form">
+    <label for="water-amount">Water Amount:</label><br>
+    <input type="text" id="water-amount" name="amount"><br><br>
+    <button type="submit">Submit</button>
 </form>
+
 <ul>
     {% for water in waters %}
         <li>Water: {{ water.amount }}</li>
     {% endfor %}
 </ul>
+
 </body>
-
-
-
-
-<script>
-  // Get the form element
-  var form = document.getElementById('water-form');
-  // Add a submit event listener to the form
-  form.addEventListener('submit', function(event) {
-    // Prevent the default form submission behavior
-    event.preventDefault();
-    // Get the water amount from the form
-    var waterAmount = document.getElementById('water-amount').value;
-    // Send a POST request to the server with the water amount
-    fetch('/water', {
-      method: 'POST',
-      body: JSON.stringify({ amount: waterAmount }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-  });
-</script>

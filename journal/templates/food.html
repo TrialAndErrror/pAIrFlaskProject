@@ -5,12 +5,13 @@
 </head>
 <body>
 <h1>Foods</h1>
-<form id="food-form">
-  <label for="food-name">Food Name:</label><br>
-  <input type="text" id="food-name" name="food-name"><br>
-  <label for="food-amount">Food Amount:</label><br>
-  <input type="text" id="food-amount" name="food-amount"><br><br>
-  <button type="submit">Submit</button>
+
+<form action="/food" method="post" id="food-form">
+    <label for="food-name">Food Name:</label><br>
+    <input type="text" id="food-name" name="name"><br>
+    <label for="food-amount">Food Amount:</label><br>
+    <input type="text" id="food-amount" name="amount"><br><br>
+    <button type="submit">Submit</button>
 </form>
 <ul>
     {% for food in foods %}
@@ -18,24 +19,3 @@
     {% endfor %}
 </ul>
 </body>
-
-<script>
-  // Get the form element
-  var form = document.getElementById('food-form');
-  // Add a submit event listener to the form
-  form.addEventListener('submit', function(event) {
-    // Prevent the default form submission behavior
-    event.preventDefault();
-    // Get the food name and amount from the form
-    var foodName = document.getElementById('food-name').value;
-    var foodAmount = document.getElementById('food-amount').value;
-    // Send a POST request to the server with the food name and amount
-    fetch('/food', {
-      method: 'POST',
-      body: JSON.stringify({ name: foodName, amount: foodAmount }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-  });
-</script>
