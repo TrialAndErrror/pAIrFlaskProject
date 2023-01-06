@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Commands</title>
+</head>
+<body>
+<h1>Foods</h1>
+<ul>
+    {% for command in commands %}
+        <li>{{ command.command }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date Picker</title>
+    <script src="{{ url_for('static', filename='js/getAllData.js') }}"></script>
+</head>
+<body>
+    <!-- Date picker input -->
+    <input type="date" id="datepicker">
+    <!-- Button to send request -->
+    <button onclick="getAllData()">Send Request</button>
+
+    <h1>Foods</h1>
+    <ul id="foodList">
+    </ul>
+
+    <h1>Drinks</h1>
+    <ul id="waterList">
+    </ul>
+
+<!-- Script to send request -->
+<script src="{{ url_for('static', filename='js/getAllWaters.js') }}"></script>
+
+</body>
+</html>
