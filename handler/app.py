@@ -63,7 +63,7 @@ def receive_command():
     commands = Command.query.all()
 
     # Render the template with the commands
-    return render_template('templates/commands.html', commands=commands)
+    return render_template('templates/entryList.html', commands=commands)
 
 
 def run_app():

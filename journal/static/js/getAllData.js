@@ -30,12 +30,24 @@ function updateElement(elementId, data) {
     }
 }
 
-export function getAllData() {
+async function fetchData(date) {
+    await fetch('/', {
+        method: 'POST',
+        body: JSON.stringify({date: date}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(data => {
+        var food = data.food;
+        updateElement('foodList', food)
+
+        var water = data.water;
+        updateElement('waterList', water)
+    })
+}
+
+function getAllData() {
     var date = document.getElementById('datepicker').value;
 
-    const foodData = getAllFoods(date)
-    updateElement('foodList', foodData)
-
-    const waterData = getAllWaters(date)
-    updateElement('waterList', waterData)
+    fetchData(date)
 }

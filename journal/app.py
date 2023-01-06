@@ -1,106 +1,88 @@
-from flask import Flask, request, render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import request, render_template, jsonify
 import datetime
 from dotenv import load_dotenv
 import os
 
+from journal.models.food import Food, make_food, get_foods
+from journal.models.water import Water, make_water, get_waters
+from .dataclasses.message import parse_request_data
+from . import app, db
+
 load_dotenv(dotenv_path="../.env")
 
-app = Flask(__name__, template_folder=".")
 
-# Set up a database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/journal.db'
-db = SQLAlchemy(app)
-
-
-# Define a model for Food entries
-class Food(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    amount = db.Column(db.BLOB, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-
-    def __repr__(self):
-        return '<Command %r>' % self.command
-
-
-# Define a model for Water entries
-class Water(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.BLOB, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-
-    def __repr__(self):
-        return '<Command %r>' % self.command
-
-
-# Create the database tables if they don't already exist
-with app.app_context():
-    db.create_all()
-
-
-def make_food(amount, name):
-    new_entry = Food(amount=amount, name=name)
-
-    db.session.add(new_entry)
-    db.session.commit()
-
-    return f'Food entry recorded: {amount} of {name}.'
-
-
-def make_water(amount):
-    new_entry = Water(amount=amount)
-
-    db.session.add(new_entry)
-    db.session.commit()
-
-    return f'Water entry recorded: {amount}.'
-
-
-# Set up a route to receive POST requests at the /commands endpoint
 @app.route('/', methods=['GET', 'POST'])
-def receive_command():
+def all_data():
     if request.method == 'POST':
         # Get the JSON data from the request body
         data = request.get_json()
 
-        # Access the data as a dictionary
-        entry_type = data['type']
-        amount = data['amount']
-        name = data.get("name", "")
+        date_str = data.get('date')
 
-        match entry_type:
-            case "food":
-                response = make_food(amount, name)
-            case "drink":
-                response = make_water(amount)
-            case _:
-                response = f"Unknown command type {entry_type}; data not saved."
+        date = None
+        if date_str:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
 
-        return response
+        foods = get_foods(date)
+        waters = get_waters(date)
 
-    # Get all commands from the database
+        return jsonify({
+            'foods': foods,
+            'waters': waters,
+        })
+
+    # Get all entries from the database
     foods = Food.query.all()
     waters = Water.query.all()
 
     # Render the template with the commands
-    return render_template('templates/commands.html', foods=foods, waters=waters)
+    return render_template('templates/entryList.html', foods=foods, waters=waters)
+
+
+# Set up a route to receive POST requests at the /commands endpoint
+@app.route('/message', methods=['GET'])
+def receive_message():
+    if request.method == 'POST':
+        # Get the JSON data from the request body
+        message = parse_request_data(request.get_json())
+
+        match message.entry_type:
+            case "food":
+                response = make_food(message.amount, message.name)
+            case "drink":
+                response = make_water(message.amount)
+            case _:
+                response = f"Unknown command type {message.entry_type}; data not saved."
+
+        return response
 
 
 @app.route('/food', methods=['GET', 'POST'])
-def receive_command():
+def food():
     if request.method == 'POST':
         # Get the JSON data from the request body
         data = request.get_json()
 
-        # Access the data as a dictionary
-        amount = data['amount']
-        name = data.get("name", "")
+        make_food(
+            amount=data['amount'],
+            name=data.get("name", "")
+        )
 
-        new_entry = Food(amount=amount, name=name)
+    foods = Food.query.all()
 
-        db.session.add(new_entry)
-        db.session.commit()
+    return render_template('templates/food.html', foods=foods)
+
+
+@app.route('/water', methods=['GET', 'POST'])
+def water():
+    if request.method == 'POST':
+        # Get the JSON data from the request body
+        data = request.get_json()
+        make_water(amount=data['amount'])
+
+    waters = Water.query.all()
+
+    return render_template('templates/water.html', waters=waters)
 
 
 def run_app():

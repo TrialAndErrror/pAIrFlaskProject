@@ -1,17 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>Commands</title>
-</head>
-<body>
-<h1>Foods</h1>
-<ul>
-    {% for command in commands %}
-        <li>{{ command.command }}</li>
-    {% endfor %}
-</ul>
-</body>
-</html>
+
 
 <!DOCTYPE html>
 <html>
@@ -27,14 +14,19 @@
 
     <h1>Foods</h1>
     <ul id="foodList">
+        {% for food in foods %}
+            <li>{{ food.name }}: {{ food.amount }}</li>
+        {% endfor %}
     </ul>
 
     <h1>Drinks</h1>
     <ul id="waterList">
+        {% for water in waters %}
+            <li>Water: {{ water.amount }}</li>
+        {% endfor %}
     </ul>
 
 <!-- Script to send request -->
-<script src="{{ url_for('static', filename='js/getAllWaters.js') }}"></script>
 
 </body>
 </html>
