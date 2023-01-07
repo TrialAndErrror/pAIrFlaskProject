@@ -1,4 +1,4 @@
-from .. import db
+from feeding_calc import db
 import datetime
 
 

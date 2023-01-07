@@ -1,7 +1,7 @@
 import datetime
-from common.models import ResponseMessage
+from journal.models.ResponseMessage import ResponseMessage
 
-from .. import db
+from journal import db
 
 
 class Water(db.Model):

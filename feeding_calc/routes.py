@@ -1,6 +1,6 @@
 from flask import request, render_template, jsonify
 
-from common.models import ResponseMessage
+from feeding_calc.models.ResponseMessage import ResponseMessage
 
 from dotenv import load_dotenv
 import os
@@ -8,7 +8,7 @@ from feeding_calc import app, db
 from feeding_calc.models.VolumeRequest import VolumeRequest
 from feeding_calc.models.NutramigenCalculation import NutramigenCalculation
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv(dotenv_path=".env")
 
 # Need to import your models before creating database
 with app.app_context():

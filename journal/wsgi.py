@@ -1,0 +1,1 @@
+from journal.routes import app
