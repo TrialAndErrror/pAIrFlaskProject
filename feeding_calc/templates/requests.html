@@ -11,6 +11,10 @@
 </head>
 <body>
 <h1>Volume Requests</h1>
+<form method="post" action="/message">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="btn btn-danger">Delete All Calculations</button>
+</form>
 <table>
     <thead>
     <tr>
@@ -24,7 +28,7 @@
     {% for request in volume_requests %}
         <tr>
             <td>{{ request.id }}</td>
-            <td>{{ request.volume }}</td>
+            <td>{{ request.final_volume }}</td>
             <td>{{ request.calorie_density }}</td>
             <td>{{ request.created_at }}</td>
         </tr>

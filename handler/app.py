@@ -1,39 +1,12 @@
 import os
 
-from flask import Flask, request, render_template
-from flask_sqlalchemy import SQLAlchemy
-import json
+from flask import request, render_template
+
+from handler.models.command import Command
+from . import app, db
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path="../.env")
-
-app = Flask(__name__, template_folder=".")
-
-# Set up a database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/commands.db'
-db = SQLAlchemy(app)
-
-
-# Define a model for the commands
-class Command(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    command = db.Column(db.String(200), nullable=False)
-    data = db.Column(db.BLOB, nullable=False)
-
-    def __init__(self, command, data):
-        self.command = command
-        self.data = json.dumps(data)
-
-    @property
-    def data(self):
-        return json.loads(self.data_json)
-
-    @data.setter
-    def data(self, value):
-        self.data_json = json.dumps(value)
-
-    def __repr__(self):
-        return '<Command %r>' % self.command
 
 
 # Create the database tables if they don't already exist

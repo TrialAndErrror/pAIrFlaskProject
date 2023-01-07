@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, jsonify
 
 from common.models import ResponseMessage
 
@@ -51,6 +51,8 @@ def save_calculation(calorie_density: int, total_volume: int):
     # Commit the transaction
     db.session.commit()
 
+    return calculation
+
 
 @app.route('/', methods=['GET', 'POST', 'DELETE'])
 def allData():
@@ -77,44 +79,52 @@ def allData():
 @app.route('/message', methods=['GET', 'POST'])
 def receive_command():
     if request.method == 'POST':
-        # Get the JSON data from the request body
-        data = request.get_json()
+        if request.form.get("_method") == "DELETE":
+            # Delete all VolumeRequest entries
+            VolumeRequest.query.delete()
 
-        calories = data['calories']
-        volume = data['volume']
-
-        # Create a new Command object and save it to the database
-        save_request = save_volume_request(
-            calories=calories,
-            volume=volume
-        )
-
-        if save_request.success:
-            formula_calc = NutramigenCalculation(
-                calorie_density=calories,
-                total_volume=volume
-            )
-            # calculate volume
-
-            return ResponseMessage(
-                success=True,
-                message=f"{formula_calc.nutramigen_amount} g powder required to make {formula_calc.total_volume} @ {formula_calc.calorie_density} cal"
-            )
-
+            # Commit the transaction
+            db.session.commit()
         else:
-            return save_request
+            # Get the JSON data from the request body
+            data = request.get_json()
+
+            calories = data['calories']
+            volume = data['volume']
+
+            # Create a new Command object and save it to the database
+            save_request = save_volume_request(
+                calories=calories,
+                volume=volume
+            )
+
+            if save_request.success:
+                formula_calc = save_calculation(
+                    calorie_density=calories,
+                    total_volume=volume
+                )
+                # calculate volume
+
+                response = ResponseMessage(
+                    success=True,
+                    message=f"{formula_calc.nutramigen_scoops:.2f} scoops ({formula_calc.nutramigen_grams:.2f}g) of powder required to make {formula_calc.total_volume:.0f} mL of formula @ {formula_calc.calorie_density:.0f} cal"
+                )
+
+                return jsonify(response.message, 200)
+
+            else:
+                return jsonify(save_request.message, 400)
 
     volume_requests = VolumeRequest.query.all()
 
     return render_template('requests.html', volume_requests=volume_requests)
 
 
-
 def run_app():
     port = os.environ.get("FEEDING_CALC_PORT")
     debug = os.environ.get("DEBUG")
     print(f"Running Feeding Calc on {port} {'in debug mode' if debug else ''}")
-    app.run(port=port, debug=debug)
+    app.run(host='0.0.0.0', port=port, debug=debug)
 
 
 if __name__ == '__main__':
