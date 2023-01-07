@@ -10,6 +10,10 @@ from feeding_calc.models.NutramigenCalculation import NutramigenCalculation
 
 load_dotenv(dotenv_path="../.env")
 
+# Need to import your models before creating database
+with app.app_context():
+    db.create_all()
+
 
 def save_volume_request(calories, volume):
     if not calories:
@@ -37,8 +41,32 @@ def save_volume_request(calories, volume):
     )
 
 
-@app.route('/', methods=['GET', 'POST'])
+def save_calculation(calorie_density: int, total_volume: int):
+    # Create a new NutramigenCalculation entry
+    calculation = NutramigenCalculation(calorie_density=calorie_density, total_volume=total_volume)
+
+    # Add the calculation to the database session
+    db.session.add(calculation)
+
+    # Commit the transaction
+    db.session.commit()
+
+
+@app.route('/', methods=['GET', 'POST', 'DELETE'])
 def allData():
+    if request.method == 'POST':
+        if request.form.get("_method") == "DELETE":
+            # Delete all NutramigenCalculation entries
+            NutramigenCalculation.query.delete()
+
+            # Commit the transaction
+            db.session.commit()
+        else:
+            save_calculation(
+                int(request.form['calorie_density']),
+                int(request.form['total_volume']),
+            )
+
     # Get the list of calculations from the database
     calculations = NutramigenCalculation.query.all()
     # Render the template and pass the calculations to the template context
@@ -75,6 +103,11 @@ def receive_command():
 
         else:
             return save_request
+
+    volume_requests = VolumeRequest.query.all()
+
+    return render_template('requests.html', volume_requests=volume_requests)
+
 
 
 def run_app():

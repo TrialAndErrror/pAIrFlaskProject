@@ -1,19 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feeding Calculator</title>
+</head>
+<body>
 <!-- Form to enter calorie density and total volume -->
 <form id="calculation-form" action="/" method="post">
   <label for="calorie-density">Calorie density:</label>
   <input type="number" id="calorie-density" name="calorie_density">
   <br>
-  <label for="total-volume">Total volume:</label>
+  <label for="total-volume">Target volume:</label>
   <input type="number" id="total-volume" name="total_volume">
   <br>
   <button type="submit">Submit</button>
 </form>
 
+<form method="post" action="/">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="btn btn-danger">Delete All Calculations</button>
+</form>
+
+
 <!-- Template to display previous calculations -->
 {% for calculation in calculations %}
   <div>
-    <p>Calorie density: {{ calculation.calorie_density }}</p>
-    <p>Total volume: {{ calculation.total_volume }}</p>
-    <p>Nutramigen amount: {{ calculation.nutramigen_amount }}</p>
+  <h3>Calculation {{ calculation.id }} ({{ calculation.created_at.strftime('%B %d, %Y') }}):</h3>
+      <ul>
+          <li>Total volume: {{ calculation.total_volume }} mL total @ {{ calculation.calorie_density }} cal</li>
+          <li>Nutramigen Scoops: {{ calculation.nutramigen_scoops|round(2) }} ({{ calculation.nutramigen_grams|round(2) }}g)</li>
+      </ul>
   </div>
 {% endfor %}
+
+</body>
+</html>

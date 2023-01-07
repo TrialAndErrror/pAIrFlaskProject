@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Volume Requests</title>
+    <style>
+        td, th {
+            border: 2px solid black;
+            border-collapse: separate;
+        }
+    </style>
+</head>
+<body>
+<h1>Volume Requests</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Volume</th>
+        <th>Calorie Density</th>
+        <th>Created At</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for request in volume_requests %}
+        <tr>
+            <td>{{ request.id }}</td>
+            <td>{{ request.volume }}</td>
+            <td>{{ request.calorie_density }}</td>
+            <td>{{ request.created_at }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
