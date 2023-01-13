@@ -8,7 +8,7 @@ from handler.models.ResponseMessage import ResponseMessage
 from . import app, db
 
 
-load_dotenv(dotenv_path=".env")
+load_dotenv(dotenv_path="../.env")
 
 # Create the database tables if they don't already exist
 with app.app_context():
@@ -16,8 +16,9 @@ with app.app_context():
 
 
 def send_message_and_receive_response(data, service_port):
-    endpoint = f'{os.environ.get("SERVER_URL")}:{service_port}'
-    response: ResponseMessage = requests.post(endpoint, json=data).json()
+    endpoint = f'http://{os.environ.get("SERVER_URL")}:{service_port}'
+    print(endpoint)
+    response: ResponseMessage = requests.post(url=endpoint, json=data).json()
 
     if response.success:
         return jsonify(response.message, 200)
@@ -28,6 +29,29 @@ def send_message_and_receive_response(data, service_port):
 # Set up a route to receive POST requests at the /commands endpoint
 @app.route('/', methods=['GET', 'POST'])
 def receive_command():
+    """ Receive command and dispatch accordingly"""
+
+    """
+    Command Format:
+        {
+            'command': 'calc' | 'journal'
+            'data': {}
+        }
+        
+    Calc Data:
+        {
+            'calories': float
+            'volume': float
+        }
+        
+    Journal Data:
+        {
+            'entry_type': str
+            'amount': float
+            'name': str
+        }
+    """
+
     if request.method == 'POST':
         # Get the JSON data from the request body
         data = request.get_json()

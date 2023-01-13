@@ -28,6 +28,7 @@
       <ul>
           <li>Total volume: {{ calculation.total_volume }} mL total @ {{ calculation.calorie_density }} cal</li>
           <li>Nutramigen Scoops: {{ calculation.nutramigen_scoops|round(2) }} ({{ calculation.nutramigen_grams|round(2) }}g)</li>
+          <li>Volume of Water: {{ calculation.volume_water }}</li>
       </ul>
   </div>
 {% endfor %}

@@ -40,6 +40,16 @@ def all_data():
 # Set up a route to receive POST requests at the /commands endpoint
 @app.route('/message', methods=['GET'])
 def receive_message():
+    """ Receive command and process """
+
+    """
+    Command:
+        {
+            'entry_type': str
+            'amount': float
+            'name': str
+        }
+    """
     if request.method == 'POST':
         # Get the JSON data from the request body
         message = parse_request_data(request.get_json())

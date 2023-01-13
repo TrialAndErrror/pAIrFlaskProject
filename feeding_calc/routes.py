@@ -78,6 +78,16 @@ def allData():
 # Set up a route to receive POST requests at the /commands endpoint
 @app.route('/message', methods=['GET', 'POST'])
 def receive_command():
+    """ Receive command and process """
+
+    """
+    Command:
+        {
+            'calories': float
+            'volume': float
+        }
+    """
+
     if request.method == 'POST':
         if request.form.get("_method") == "DELETE":
             # Delete all VolumeRequest entries

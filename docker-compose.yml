@@ -9,16 +9,31 @@ services:
       - journal
       - feeding_calc
     ports:
-      - "5000:8000"
+      - "${HANDLER_PORT}:8000"
+    environment:
+      - SERVER_URL
+      - HANDLER_PORT
+      - FEEDING_CALC_PORT
+      - JOURNAL_PORT
   journal:
     build:
       context: journal
       dockerfile: Dockerfile
     ports:
-      - "5001:8000"
+      - "${JOURNAL_PORT}:8000"
+    environment:
+      - SERVER_URL
+      - HANDLER_PORT
+      - FEEDING_CALC_PORT
+      - JOURNAL_PORT
   feeding_calc:
     build:
       context: feeding_calc
       dockerfile: Dockerfile
     ports:
-      - "5002:8000"
+      - "${FEEDING_CALC_PORT}:8000"
+    environment:
+      - SERVER_URL
+      - HANDLER_PORT
+      - FEEDING_CALC_PORT
+      - JOURNAL_PORT
