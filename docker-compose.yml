@@ -10,7 +10,7 @@ services:
       - journal
       - feeding_calc
     ports:
-      - "${HANDLER_PORT}:8000"
+      - "5000:8000"
     volumes:
       - ./handler:/app/handler
   journal:
@@ -22,6 +22,14 @@ services:
       - "${JOURNAL_PORT}:8000"
     volumes:
       - ./journal:/app/journal
+  journal_db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
   feeding_calc:
     build:
       context: feeding_calc
@@ -31,4 +39,11 @@ services:
       - "${FEEDING_CALC_PORT}:8000"
     volumes:
       - ./feeding_calc:/app/feeding_calc
-
+  feeding_calc_db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
