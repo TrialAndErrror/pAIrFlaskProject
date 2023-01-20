@@ -106,22 +106,22 @@ def receive_command():
                 volume=volume
             )
 
-            if save_request.success:
+            if save_request.get('success'):
                 formula_calc = save_calculation(
                     calorie_density=calories,
                     total_volume=volume
                 )
                 # calculate volume
 
-                response = ResponseMessage(
+                response = dict(
                     success=True,
                     message=f"{formula_calc.nutramigen_scoops:.2f} scoops ({formula_calc.nutramigen_grams:.2f}g) of powder required to make {formula_calc.total_volume:.0f} mL of formula @ {formula_calc.calorie_density:.0f} cal"
                 )
 
-                return jsonify(response.message, 200)
+                return jsonify(response)
 
             else:
-                return jsonify(save_request.message, 400)
+                return jsonify(save_request)
 
     volume_requests = VolumeRequest.query.all()
 

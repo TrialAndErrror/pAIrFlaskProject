@@ -38,7 +38,7 @@ def all_data():
 
 
 # Set up a route to receive POST requests at the /commands endpoint
-@app.route('/message', methods=['GET'])
+@app.route('/message', methods=['GET', 'POST'])
 def receive_message():
     """ Receive command and process """
 

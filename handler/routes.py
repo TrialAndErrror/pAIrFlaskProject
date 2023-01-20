@@ -3,11 +3,8 @@ import requests
 from flask import request, render_template, jsonify
 
 from handler.models.command import Command
-from dotenv import load_dotenv
 from . import app, db
 
-
-load_dotenv(dotenv_path="../.env")
 
 # Create the database tables if they don't already exist
 with app.app_context():
@@ -15,16 +12,15 @@ with app.app_context():
 
 
 def send_message_and_receive_response(data, service: str):
-    endpoint = f'http://{service}:8000'
+    endpoint = f'http://{service}:8000/message'
     response = requests.post(url=endpoint, json=data)
-    print(response)
-    print(response.json())
-    response_data: dict = response.json()
+
+    response_data = response.json()
 
     if response_data.get('success'):
-        return jsonify(response_data.get('message'), 200)
+        return jsonify(response_data)
     else:
-        return jsonify(response_data.get('message'), 400)
+        return jsonify(response_data)
 
 
 # Set up a route to receive POST requests at the /commands endpoint
@@ -65,21 +61,13 @@ def receive_command():
         db.session.add(new_command)
         db.session.commit()
 
-        match command:
-            case "calc":
-                service = "feeding_calc"
-                return send_message_and_receive_response(data, service)
-            case "journal":
-                service = "journal"
-                return send_message_and_receive_response(data, service)
-            case "_":
-                return f'Unknown Command received: {command}'
+        return send_message_and_receive_response(data, command)
+    else:
+        # Get all commands from the database
+        commands = Command.query.all()
 
-    # Get all commands from the database
-    commands = Command.query.all()
-
-    # Render the template with the commands
-    return render_template('commands.html', commands=commands)
+        # Render the template with the commands
+        return render_template('commands.html', commands=commands)
 
 
 def run_app():
