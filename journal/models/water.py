@@ -1,6 +1,4 @@
 import datetime
-from journal.models.ResponseMessage import ResponseMessage
-
 from journal import db
 
 
@@ -15,7 +13,7 @@ class Water(db.Model):
 
 def make_water(amount):
     if not amount:
-        return ResponseMessage(
+        return dict(
             message=f'Missing Water Amount',
             success=False
         )
@@ -25,7 +23,7 @@ def make_water(amount):
     db.session.add(new_entry)
     db.session.commit()
 
-    return ResponseMessage(
+    return dict(
         message=f'Water entry recorded: {amount}.',
         success=True
     )

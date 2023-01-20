@@ -1,7 +1,5 @@
 from flask import request, render_template, jsonify
 
-from feeding_calc.models.ResponseMessage import ResponseMessage
-
 from dotenv import load_dotenv
 import os
 from feeding_calc import app, db
@@ -17,12 +15,12 @@ with app.app_context():
 
 def save_volume_request(calories, volume):
     if not calories:
-        return ResponseMessage(
+        return dict(
             message='Missing Calorie Density',
             success=False
         )
     if not volume:
-        return ResponseMessage(
+        return dict(
             message='Missing Final Volume',
             success=False
         )
@@ -35,7 +33,7 @@ def save_volume_request(calories, volume):
     db.session.add(new_entry)
     db.session.commit()
 
-    return ResponseMessage(
+    return dict(
         success=True,
         message=f"Successfully created Volume Request ({volume} @ {calories} cal)"
     )

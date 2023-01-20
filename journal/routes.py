@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, jsonify
 import datetime
 from dotenv import load_dotenv
 import os
@@ -6,7 +6,7 @@ import os
 from journal.models.food import Food, make_food, get_foods
 from journal.models.water import Water, make_water, get_waters
 from journal.models.message import parse_request_data
-from journal.models.ResponseMessage import ResponseMessage
+
 from . import app, db
 
 load_dotenv(dotenv_path=".env")
@@ -61,12 +61,12 @@ def receive_message():
             case "drink":
                 response = make_water(message.amount)
             case _:
-                response = ResponseMessage(
+                response = dict(
                     success=False,
                     message=f"Unknown command type {message.entry_type}; data not saved."
                 )
 
-        return response
+        return jsonify(response)
 
 
 @app.route('/food', methods=['GET', 'POST'])

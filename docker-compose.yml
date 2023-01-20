@@ -5,35 +5,30 @@ services:
     build:
       context: handler
       dockerfile: Dockerfile
+    command: ["gunicorn", "--bind", ":8000", "--reload", "handler.wsgi:app"]
     depends_on:
       - journal
       - feeding_calc
     ports:
       - "${HANDLER_PORT}:8000"
-    environment:
-      - SERVER_URL
-      - HANDLER_PORT
-      - FEEDING_CALC_PORT
-      - JOURNAL_PORT
+    volumes:
+      - ./handler:/app/handler
   journal:
     build:
       context: journal
       dockerfile: Dockerfile
+    command: [ "gunicorn", "--bind", ":8000", "--reload", "journal.wsgi:app" ]
     ports:
       - "${JOURNAL_PORT}:8000"
-    environment:
-      - SERVER_URL
-      - HANDLER_PORT
-      - FEEDING_CALC_PORT
-      - JOURNAL_PORT
+    volumes:
+      - ./journal:/app/journal
   feeding_calc:
     build:
       context: feeding_calc
       dockerfile: Dockerfile
+    command: [ "gunicorn", "--bind", ":8000", "--reload", "feeding_calc.wsgi:app" ]
     ports:
       - "${FEEDING_CALC_PORT}:8000"
-    environment:
-      - SERVER_URL
-      - HANDLER_PORT
-      - FEEDING_CALC_PORT
-      - JOURNAL_PORT
+    volumes:
+      - ./feeding_calc:/app/feeding_calc
+

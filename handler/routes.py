@@ -4,7 +4,6 @@ from flask import request, render_template, jsonify
 
 from handler.models.command import Command
 from dotenv import load_dotenv
-from handler.models.ResponseMessage import ResponseMessage
 from . import app, db
 
 
@@ -15,15 +14,17 @@ with app.app_context():
     db.create_all()
 
 
-def send_message_and_receive_response(data, service_port):
-    endpoint = f'http://{os.environ.get("SERVER_URL")}:{service_port}'
-    print(endpoint)
-    response: ResponseMessage = requests.post(url=endpoint, json=data).json()
+def send_message_and_receive_response(data, service: str):
+    endpoint = f'http://{service}:8000'
+    response = requests.post(url=endpoint, json=data)
+    print(response)
+    print(response.json())
+    response_data: dict = response.json()
 
-    if response.success:
-        return jsonify(response.message, 200)
+    if response_data.get('success'):
+        return jsonify(response_data.get('message'), 200)
     else:
-        return jsonify(response.message, 400)
+        return jsonify(response_data.get('message'), 400)
 
 
 # Set up a route to receive POST requests at the /commands endpoint
@@ -66,11 +67,11 @@ def receive_command():
 
         match command:
             case "calc":
-                service_port = os.environ.get("FEEDING_CALC_PORT")
-                return send_message_and_receive_response(data, service_port)
+                service = "feeding_calc"
+                return send_message_and_receive_response(data, service)
             case "journal":
-                service_port = os.environ.get("JOURNAL_PORT")
-                return send_message_and_receive_response(data, service_port)
+                service = "journal"
+                return send_message_and_receive_response(data, service)
             case "_":
                 return f'Unknown Command received: {command}'
 

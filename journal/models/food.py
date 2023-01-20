@@ -1,7 +1,5 @@
 import datetime
 
-from journal.models.ResponseMessage import ResponseMessage
-
 from journal import db
 
 
@@ -17,13 +15,13 @@ class Food(db.Model):
 
 def make_food(amount, name):
     if not amount:
-        return ResponseMessage(
+        return dict(
             message=f'Missing Food Amount',
             success=False
         )
 
     if not name:
-        return ResponseMessage(
+        return dict(
             message=f'Missing Food Name',
             success=False
         )
@@ -32,7 +30,7 @@ def make_food(amount, name):
     db.session.add(new_entry)
     db.session.commit()
 
-    return ResponseMessage(
+    return dict(
         message=f'Food entry recorded: {amount} of {name}.',
         success=True
     )

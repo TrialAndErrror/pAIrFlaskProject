@@ -12,4 +12,4 @@ RUN pip install gunicorn
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "journal.wsgi:app"]
+CMD ["gunicorn", "--bind", ":8000", "--reload", "journal.wsgi:app"]
