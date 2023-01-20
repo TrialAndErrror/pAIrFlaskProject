@@ -5,18 +5,20 @@
     <script src="{{ url_for('static', filename='js/getAllData.js') }}"></script>
 </head>
 <body>
+    <h1>Food & Water Logs</h1>
+
 <form action="/" method="post">
     <input type="date" name="date">
     <button type="submit">Submit</button>
 </form>
 
 {% if date %}
-    <h1>Displaying logs for {{ date }}</h1>
+    <h3>Displaying logs for {{ date }}</h3>
 {% else %}
-    <h1>Displaying all logs</h1>
+    <h3>Displaying all logs</h3>
 {% endif %}
 
-<h1>Foods</h1>
+<h2>Foods</h2>
 {% if foods %}
 <ul id="foodList">
     {% for food in foods %}
@@ -27,7 +29,7 @@
 <p>No foods recorded {% if date %}on {{ date }}{% endif %}</p>
 {% endif %}
 
-<h1>Drinks</h1>
+<h2>Drinks</h2>
 {% if waters %}
 <ul id="waterList">
     {% for water in waters %}
