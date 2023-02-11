@@ -18,7 +18,6 @@ with app.app_context():
 
 @app.route('/', methods=['GET', 'POST'])
 def all_data():
-
     # Get all entries from the database
     foods = Food.query.all()
     waters = Water.query.all()

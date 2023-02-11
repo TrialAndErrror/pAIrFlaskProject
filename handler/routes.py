@@ -47,6 +47,13 @@ def receive_command():
             'amount': float
             'name': str
         }
+        
+    Temperature Data:
+        {
+            'entry_type': str
+            'temperature': float
+            'humidity': str
+        }
     """
 
     if request.method == 'POST':

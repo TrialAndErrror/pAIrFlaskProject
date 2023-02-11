@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date Picker</title>
+    <script src="{{ url_for('static', filename='js/getAllData.js') }}"></script>
+</head>
+<body>
+<h1>Temperature Sensor Logs</h1>
+
+<form action="/" method="post">
+    <input type="date" name="date">
+    <button type="submit">Submit</button>
+</form>
+
+{% if date %}
+    <h3>Displaying logs for {{ date }}</h3>
+{% else %}
+    <h3>Displaying all logs</h3>
+{% endif %}
+
+<h2>Temperature & Humidity</h2>
+{% if reports %}
+    <ul id="foodList">
+        {% for entry in reports %}
+            <li>Temp: {{ entry.temperature }} // Humidity: {{ food.humidity }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No Temperatures recorded {% if date %}on {{ date }}{% endif %}</p>
+{% endif %}
+
+</body>
+</html>

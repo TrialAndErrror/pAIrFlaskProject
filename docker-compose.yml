@@ -31,4 +31,13 @@ services:
       - "${FEEDING_CALC_PORT}:8000"
     volumes:
       - ./feeding_calc:/app/feeding_calc
+  temperature:
+    build:
+      context: temperature
+      dockerfile: Dockerfile
+    command: [ "gunicorn", "--bind", ":8000", "--reload", "temperature.wsgi:app" ]
+    ports:
+      - "${TEMPERATURE_PORT}:8000"
+    volumes:
+      - ./temperature:/app/temperature
 
