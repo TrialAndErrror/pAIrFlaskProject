@@ -6,7 +6,7 @@ Requires=docker.socket
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker compose -f /home/wade/pAIrFlaskProject/docker-compose.yml up
+ExecStart=/usr/bin/docker compose -f /home/wade/pAIrFlaskProject/docker-compose.yml up --build
 ExecStop=/usr/bin/docker compose -f /home/wade/pAIrFlaskProject/docker-compose.yml down
 
 [Install]
