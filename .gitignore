@@ -1,3 +1,4 @@
 /.idea/
 /.env
 /feeding_calc/.env
+*__pycache__
