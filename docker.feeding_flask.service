@@ -1,0 +1,13 @@
+[Unit]
+Description=Feeding Flask Container
+After=docker.service
+Wants=network-online.target docker.socket
+Requires=docker.socket
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker compose -f /home/wade/pAIrFlaskProject/docker-compose.yml up
+ExecStop=/usr/bin/docker compose -f /home/wade/pAIrFlaskProject/docker-compose.yml down
+
+[Install]
+WantedBy=multiuser.target
