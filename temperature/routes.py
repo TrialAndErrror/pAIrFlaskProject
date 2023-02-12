@@ -2,6 +2,9 @@ from flask import request, render_template, jsonify
 import datetime
 from dotenv import load_dotenv
 import os
+import pytz
+from pytz import timezone
+import tzlocal
 
 from temperature.models.report import Report, get_reports, make_report
 from temperature.models.message import parse_request_data
@@ -13,6 +16,15 @@ load_dotenv(dotenv_path=".env")
 # Create the database tables if they don't already exist
 with app.app_context():
     db.create_all()
+
+def datetimefilter(value, format='%m/%d/%Y | %H:%M:%S'):
+    tz = pytz.timezone('US/Eastern')
+    utc = pytz.timezone('UTC')
+    value = utc.localize(value, is_dst=None).astimezone(pytz.utc)
+    local_dt = value.astimezone(tz)
+    return local_dt.strftime(format)
+
+app.jinja_env.filters['datetimefilter'] = datetimefilter
 
 
 @app.route('/', methods=['GET', 'POST'])

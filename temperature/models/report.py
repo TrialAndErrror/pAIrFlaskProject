@@ -7,7 +7,7 @@ class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Float(), nullable=False)
     humidity = db.Column(db.Float(), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
 
     def __repr__(self):
         return '<Command %r>' % self.command
