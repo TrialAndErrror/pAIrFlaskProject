@@ -36,8 +36,24 @@ services:
       context: temperature
       dockerfile: Dockerfile
     command: [ "gunicorn", "--bind", ":8000", "--reload", "temperature.wsgi:app" ]
-    ports:
-      - "${TEMPERATURE_PORT}:8000"
+    expose:
+      - "8000"
     volumes:
       - ./temperature:/app/temperature
+  frontend:
+    build:
+      context: react-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    volumes:
+      - ./react-frontend:/app/react-frontend
+  nginx:
+    build: ./nginx
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - handler
+      - temperature
+
 
