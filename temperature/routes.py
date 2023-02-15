@@ -3,7 +3,7 @@ import datetime
 from dotenv import load_dotenv
 import os
 import pytz
-
+from flask_cors import CORS
 
 from temperature.models.report import Report, get_reports, make_report
 from temperature.models.message import parse_request_data
@@ -15,6 +15,9 @@ load_dotenv(dotenv_path=".env")
 # Create the database tables if they don't already exist
 with app.app_context():
     db.create_all()
+
+
+CORS(app)
 
 
 def datetimefilter(value, format='%m/%d/%Y | %H:%M:%S'):
@@ -31,7 +34,8 @@ app.jinja_env.filters['datetimefilter'] = datetimefilter
 @app.route("/data", methods=['GET'])
 def get_data():
     reports = Report.query.all()
-    return jsonify(reports)
+    response = jsonify(reports)
+    return response
 
 
 @app.route('/', methods=['GET', 'POST'])

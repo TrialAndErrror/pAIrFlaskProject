@@ -5,11 +5,23 @@ import useFetch from "react-fetch-hook";
 import {DataType} from "./types";
 
 const TemperatureScreen = () => {
-    const {data: fetchedData, isLoading} = useFetch("http://localhost:80/data")
+    const endpoint = "http://localhost:56000/data"
+    const {data: fetchedData, isLoading} = useFetch(endpoint)
 
-    if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light" />
+    if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light"/>
 
     const data = fetchedData as DataType[]
+    if (data.length === 0) {
+        return (
+            <Container>
+                <div className="container">
+                    <Panel header="No Temperature Data Found!" bordered className="card-wide bg-light">
+                        Please wait for data to appear in the database.
+                    </Panel>
+                </div>
+            </Container>
+        )
+    }
 
     return (
         <>
