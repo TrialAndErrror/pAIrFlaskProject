@@ -1,6 +1,5 @@
 from flask import request, render_template, jsonify
 import datetime
-from dotenv import load_dotenv
 import os
 import pytz
 from flask_cors import CORS
@@ -9,8 +8,6 @@ from temperature.models.report import Report, get_reports, make_report
 from temperature.models.message import parse_request_data
 
 from . import app, db
-
-load_dotenv(dotenv_path=".env")
 
 # Create the database tables if they don't already exist
 with app.app_context():
@@ -33,7 +30,7 @@ app.jinja_env.filters['datetimefilter'] = datetimefilter
 
 @app.route("/data", methods=['GET'])
 def get_data():
-    reports = Report.query.all()
+    reports = [item.serialize() for item in Report.query.all()]
     response = jsonify(reports)
     return response
 
@@ -64,14 +61,14 @@ def receive_message():
     """
     Command:
         {
-            'entry_type': str
-            'amount': float
-            'name': str
+            'temperature': float
+            'humidity': str
         }
     """
     if request.method == 'POST':
         # Get the JSON data from the request body
         message = parse_request_data(request.get_json())
+        print(message)
 
         response = make_report(message.temperature, message.humidity)
 

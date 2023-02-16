@@ -36,8 +36,8 @@ services:
       context: temperature
       dockerfile: Dockerfile
     command: [ "gunicorn", "--bind", ":8000", "--reload", "temperature.wsgi:app" ]
-    expose:
-      - "8000"
+    ports:
+      - "${TEMPERATURE_PORT}:8000"
     volumes:
       - ./temperature:/app/temperature
   frontend:
@@ -55,5 +55,18 @@ services:
     depends_on:
       - handler
       - temperature
+  temperature_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5454:5454
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=pair
+      - POSTGRES_PORT=5454
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-
+volumes:
+  postgres_data:

@@ -1,8 +1,8 @@
 import {Panel, Table} from "rsuite";
-import {DataType} from "./types";
+import {FormattedDataType} from "./types";
 
 
-const EntriesTable = ({data}: {data: DataType[]}) => {
+const EntriesTable = ({data}: {data: FormattedDataType[]}) => {
 
     if (data.length === 0) {
         return <p>No Data available!</p>
@@ -14,7 +14,7 @@ const EntriesTable = ({data}: {data: DataType[]}) => {
                 <Table virtualized data={data} bordered={true}>
                     <Table.Column flexGrow={2} align="center" fixed>
                         <Table.HeaderCell>Time</Table.HeaderCell>
-                        <Table.Cell dataKey="created_at"/>
+                        <Table.Cell dataKey="created_at_string"/>
                     </Table.Column>
 
                     <Table.Column flexGrow={1}>

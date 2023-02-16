@@ -1,5 +1,4 @@
 import datetime
-
 from temperature import db
 
 
@@ -17,7 +16,7 @@ class Report(db.Model):
             "id": self.id,
             "temperature": self.temperature,
             "humidity": self.humidity,
-            "created_at": self.created_at
+            "created_at": self.created_at.isoformat()
         }
 
 

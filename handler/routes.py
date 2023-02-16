@@ -57,10 +57,11 @@ def receive_command():
 
     if request.method == 'POST':
         # Get the JSON data from the request body
-        data = request.get_json()
+        json_data = request.get_json()
 
         # Access the data as a dictionary
-        command = data.pop('command')
+        command = json_data.get('command')
+        data = json_data.get('data')
 
         # Create a new Command object and save it to the database
         new_command = Command(command=command, data=data)

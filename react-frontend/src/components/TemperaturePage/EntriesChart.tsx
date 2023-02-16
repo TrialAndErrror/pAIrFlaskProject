@@ -9,7 +9,7 @@ import {
 } from "victory";
 import {Panel} from "rsuite";
 import useFetch from "react-fetch-hook";
-import { DataType } from "./types";
+import {DataType, FormattedDataType} from "./types";
 
 type ZoomDomainObject = {
     x?: DomainTuple
@@ -17,7 +17,7 @@ type ZoomDomainObject = {
 }
 
 type EntriesChartProps = {
-    data: DataType[],
+    data: FormattedDataType[],
 }
 
 const EntriesChart = ({data}: EntriesChartProps) => {
