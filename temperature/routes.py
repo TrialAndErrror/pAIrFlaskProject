@@ -30,7 +30,6 @@ app.jinja_env.filters['datetimefilter'] = datetimefilter
 def get_data():
     reports = [item.serialize() for item in Report.query.all()]
     response = jsonify(reports)
-    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
