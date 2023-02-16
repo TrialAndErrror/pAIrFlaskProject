@@ -12,18 +12,10 @@ dayjs.extend(timezone)
 dayjs.tz.setDefault("America/New_York")
 
 const TemperatureScreen = () => {
-    const endpoint = "http://localhost:55004/data"
+    const endpoint = "http://192.168.1.183:55004/data"
     const {data, isLoading} = useFetch<DataType[]>(endpoint)
 
     if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light"/>
-
-    // const data = [
-    //     {
-    //         created_at: "2023-02-16T01:45:42.628116",
-    //         temperature: "50",
-    //         humidity: "10"
-    //     }
-    // ]
 
     if (!data || data.length === 0) {
         return (

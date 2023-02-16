@@ -8,6 +8,8 @@ const EntriesTable = ({data}: {data: FormattedDataType[]}) => {
         return <p>No Data available!</p>
     }
 
+    const sortedData = data.sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
+
     return (
         <>
             <Panel header="Temperature Data" bordered className="card-wide bg-dark">
