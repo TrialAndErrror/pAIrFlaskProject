@@ -1,17 +1,27 @@
 import EntriesTable from "./EntriesTable";
-import {Container, Content, Panel} from "rsuite";
+import {Container, Content, Divider, Panel} from "rsuite";
 import EntriesChart from "./EntriesChart";
 import useFetch from "react-fetch-hook";
 import {DataType, FormattedDataType} from "./types";
 import dayjs from "dayjs";
+import {useMediaQuery} from 'react-responsive'
 
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone'
+import MobileChart from "./MobileChart";
+import MobileTable from "./mobileTable";
+
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault("America/New_York")
 
-const TemperatureScreen = () => {
+function formatMobileDate(date: Date): string {
+    const time = `${date.getHours()}:${date.getMinutes()}`
+    const day = `${date.getMonth() + 1}/${date.getDate()}`
+    return `${day} ${time}`
+}
+
+const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
     const endpoint = "http://192.168.1.183:55004/data"
     const {data, isLoading} = useFetch<DataType[]>(endpoint)
 
@@ -34,9 +44,36 @@ const TemperatureScreen = () => {
         return {
             ...entry,
             created_at: dateObject,
-            created_at_string: dateObject.toString()
+            created_at_string: dateObject.toString(),
+            created_at_mobile: formatMobileDate(dateObject)
         }
     })
+
+    if (smallSize) {
+        const lastElement = formattedData.slice(-1)[0]
+        return (
+            <>
+                <Container>
+                    <div className="container-mobile">
+                        <Panel header="Current Data" bordered className="card-wide bg-dark">
+                            <div style={{display: "flex"}}>
+                                <p style={{width: "50%", textAlign: "center", fontSize: "24px"}}>Temp: <br />{lastElement.temperature}</p>
+                                <p style={{width: "50%", textAlign: "center", fontSize: "24px", marginTop: 0}}>Humidity: <br />{lastElement.humidity} %</p>
+                            </div>
+                        </Panel>
+                    </div>
+                </Container>
+                <Container>
+                    <MobileChart data={formattedData}/>
+                </Container>
+                <Container>
+                    <div className="container-mobile">
+                        <MobileTable data={formattedData}/>
+                    </div>
+                </Container>
+            </>
+        )
+    }
 
     return (
         <>
@@ -54,4 +91,7 @@ const TemperatureScreen = () => {
     )
 }
 
-export {TemperatureScreen as default}
+export {
+    TemperatureScreen as
+        default
+}

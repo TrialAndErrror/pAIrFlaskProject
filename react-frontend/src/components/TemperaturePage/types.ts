@@ -9,6 +9,7 @@ export type DataType = {
 export type FormattedDataType = {
     created_at: Date,
     created_at_string: string
+    created_at_mobile: string
     temperature: string,
     humidity: string
 }
