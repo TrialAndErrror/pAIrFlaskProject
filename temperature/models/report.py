@@ -12,6 +12,14 @@ class Report(db.Model):
     def __repr__(self):
         return '<Command %r>' % self.command
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "temperature": self.temperature,
+            "humidity": self.humidity,
+            "created_at": self.created_at
+        }
+
 
 def make_report(temperature, humidity):
     new_entry = Report(temperature=temperature, humidity=humidity)

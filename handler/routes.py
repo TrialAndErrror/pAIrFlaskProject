@@ -50,7 +50,6 @@ def receive_command():
         
     Temperature Data:
         {
-            'entry_type': str
             'temperature': float
             'humidity': str
         }
