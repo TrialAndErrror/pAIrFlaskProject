@@ -1,22 +1,28 @@
-import reactLogo from './assets/react.svg'
 import TemperatureScreen from "./components/TemperaturePage/Screen";
 import "./index.less"
-import {useState} from "react";
-import {Container, Footer, Header} from "rsuite";
+import { useState } from "react";
+import { Container, Footer } from "rsuite";
 import NavMenu from "./components/Navbar/Navbar";
-import EntriesChart from "./components/TemperaturePage/EntriesChart";
-import {useMediaQuery} from "react-responsive";
+import { useMediaQuery } from "react-responsive";
 
 function App() {
     const [currentPage, setCurrentPage] = useState('temperature')
 
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isMobileSize = useMediaQuery({ query: '(max-width: 1224px)' })
+
+    const temperatureEndpoint = import.meta.env.VITE_TEMPERATURE_ENDPOINT
+
+    console.log(temperatureEndpoint)
+    const temperatureProps = {
+        mobileScreenSize: isMobileSize,
+        temperatureEndpoint
+    }
 
     return (
         <div className="bg rs-theme-dark">
-            <NavMenu/>
+            <NavMenu />
             <Container>
-                {currentPage === "temperature" && <TemperatureScreen smallSize={isTabletOrMobile}/>}
+                {currentPage === "temperature" && <TemperatureScreen {...temperatureProps} />}
             </Container>
             <Container>
                 <Footer><br /></Footer>
