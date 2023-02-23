@@ -1,10 +1,9 @@
 import EntriesTable from "./EntriesTable";
-import {Container, Content, Divider, Panel} from "rsuite";
+import { Container, Panel } from "rsuite";
 import EntriesChart from "./EntriesChart";
 import useFetch from "react-fetch-hook";
-import {DataType, FormattedDataType} from "./types";
+import { DataType, FormattedDataType } from "./types";
 import dayjs from "dayjs";
-import {useMediaQuery} from 'react-responsive'
 
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone'
@@ -21,11 +20,15 @@ function formatMobileDate(date: Date): string {
     return `${day} ${time}`
 }
 
-const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
-    const endpoint = "http://192.168.1.183:55004/data"
-    const {data, isLoading} = useFetch<DataType[]>(endpoint)
+type TemperaturescreenProps = {
+    mobileScreenSize: boolean,
+    temperatureEndpoint: string
+}
 
-    if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light"/>
+const TemperatureScreen = ({ mobileScreenSize, temperatureEndpoint }: TemperaturescreenProps) => {
+    const { data, isLoading } = useFetch<DataType[]>(temperatureEndpoint)
+
+    if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light" />
 
     if (!data || data.length === 0) {
         return (
@@ -40,7 +43,7 @@ const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
     }
 
     const formattedData: FormattedDataType[] = data.map((entry) => {
-        const dateObject = dayjs(entry.created_at, {utc: true}).toDate()
+        const dateObject = dayjs(entry.created_at, { utc: true }).toDate()
         return {
             ...entry,
             created_at: dateObject,
@@ -49,26 +52,26 @@ const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
         }
     })
 
-    if (smallSize) {
+    if (mobileScreenSize) {
         const lastElement = formattedData.slice(-1)[0]
         return (
             <>
                 <Container>
                     <div className="container-mobile">
                         <Panel header="Current Data" bordered className="card-wide bg-dark">
-                            <div style={{display: "flex"}}>
-                                <p style={{width: "50%", textAlign: "center", fontSize: "24px"}}>Temp: <br />{lastElement.temperature}</p>
-                                <p style={{width: "50%", textAlign: "center", fontSize: "24px", marginTop: 0}}>Humidity: <br />{lastElement.humidity} %</p>
+                            <div style={{ display: "flex" }}>
+                                <p style={{ width: "50%", textAlign: "center", fontSize: "24px" }}>Temp: <br />{lastElement.temperature}</p>
+                                <p style={{ width: "50%", textAlign: "center", fontSize: "24px", marginTop: 0 }}>Humidity: <br />{lastElement.humidity} %</p>
                             </div>
                         </Panel>
                     </div>
                 </Container>
                 <Container>
-                    <MobileChart data={formattedData}/>
+                    <MobileChart data={formattedData} />
                 </Container>
                 <Container>
                     <div className="container-mobile">
-                        <MobileTable data={formattedData}/>
+                        <MobileTable data={formattedData} />
                     </div>
                 </Container>
             </>
@@ -79,12 +82,12 @@ const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
         <>
             <Container>
                 <div className="container">
-                    <EntriesChart data={formattedData}/>
+                    <EntriesChart data={formattedData} />
                 </div>
             </Container>
             <Container>
                 <div className="container">
-                    <EntriesTable data={formattedData}/>
+                    <EntriesTable data={formattedData} />
                 </div>
             </Container>
         </>
