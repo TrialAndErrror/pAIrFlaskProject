@@ -12,6 +12,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState('temperature')
 
     const isTabletOrMobile = useMediaQuery({query: '(max-width: 1224px)'})
+    console.log(import.meta.env.VITE_API_URL)
 
     return (
         <div className="bg rs-theme-dark">

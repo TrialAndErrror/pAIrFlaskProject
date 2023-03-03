@@ -22,7 +22,7 @@ function formatMobileDate(date: Date): string {
 }
 
 const TemperatureScreen = ({smallSize}: { smallSize: boolean }) => {
-    const endpoint = "http://192.168.1.183:55004/data"
+    const endpoint = "http://127.0.0.1:55004/data"
     const {data, isLoading} = useFetch<DataType[]>(endpoint)
 
     if (isLoading) return <Panel header="Loading Temperature Data" bordered className="card-wide bg-light"/>
